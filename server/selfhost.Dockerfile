@@ -4,6 +4,7 @@
 #   - Build context is the REPO ROOT, and the mem0 SDK is installed from this same
 #     commit instead of `mem0ai>=0.1.48` from PyPI, so server and SDK can never drift.
 #   - No `--reload`; runs as a non-root user.
+#   - Adds psycopg[binary]: upstream requirements need a system libpq that slim lacks.
 #   - Runs `alembic upgrade head` before starting, so the app tables (users, api_keys,
 #     request_logs, settings, ...) exist without a separate migrate step.
 #
@@ -19,8 +20,10 @@ WORKDIR /app
 
 # Server dependencies, minus the PyPI SDK (installed from source below).
 COPY server/requirements.txt /tmp/requirements.txt
+# requirements.txt asks for plain `psycopg`, which needs a system libpq that python:slim
+# does not have ("no pq wrapper available"). The binary extra bundles libpq.
 RUN grep -viE '^mem0ai' /tmp/requirements.txt > /tmp/requirements.nosdk.txt \
- && pip install -r /tmp/requirements.nosdk.txt
+ && pip install -r /tmp/requirements.nosdk.txt "psycopg[binary,pool]>=3.2.8"
 
 # mem0 SDK from this commit.
 COPY pyproject.toml README.md LICENSE /src/
