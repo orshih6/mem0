@@ -3,7 +3,7 @@
 # Differs from server/Dockerfile (upstream) in three ways:
 #   - Build context is the REPO ROOT, and the mem0 SDK is installed from this same
 #     commit instead of `mem0ai>=0.1.48` from PyPI, so server and SDK can never drift.
-#   - No `--reload`; runs as a non-root user.
+#   - No `--reload`; runs as a non-root user, with MEM0_DIR under /app/history.
 #   - Adds psycopg[binary]: upstream requirements need a system libpq that slim lacks.
 #   - Runs `alembic upgrade head` before starting, so the app tables (users, api_keys,
 #     request_logs, settings, ...) exist without a separate migrate step.
@@ -32,9 +32,14 @@ RUN pip install /src && rm -rf /src
 
 COPY server /app
 
-RUN useradd --system --uid 10001 --home-dir /app --shell /usr/sbin/nologin mem0 \
+RUN useradd --system --uid 10001 --home-dir /home/mem0 --create-home --shell /usr/sbin/nologin mem0 \
  && mkdir -p /app/history \
  && chown -R 10001:10001 /app/history
+
+# The SDK creates $MEM0_DIR (default ~/.mem0) at import time. Keep it next to the
+# history DB so one writable volume at /app/history covers all runtime state.
+ENV HOME=/home/mem0 \
+    MEM0_DIR=/app/history/.mem0
 
 USER 10001
 EXPOSE 8000
