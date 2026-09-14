@@ -1,0 +1,12 @@
+# BuildKit picks this up for server/selfhost.Dockerfile (context = repo root).
+*
+!pyproject.toml
+!README.md
+!LICENSE
+!mem0
+!server
+server/dashboard
+server/.env
+server/history
+**/__pycache__
+**/*.pyc
