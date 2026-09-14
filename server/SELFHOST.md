@@ -7,7 +7,8 @@ adds only new files, so syncing upstream never conflicts:
 | File | Purpose |
 |---|---|
 | `server/selfhost.Dockerfile` (+ `.dockerignore`) | Production API image: SDK from the same commit, no `--reload`, non-root, runs migrations on start |
-| `.github/workflows/selfhost-images.yml` | Builds `ghcr.io/orshih6/mem0-server` and `ghcr.io/orshih6/mem0-dashboard` |
+| `server/mcp/` | MCP server wrapping the self-hosted REST API, image `ghcr.io/orshih6/mem0-mcp` |
+| `.github/workflows/selfhost-images.yml` | Builds `ghcr.io/orshih6/mem0-server`, `mem0-dashboard` and `mem0-mcp` |
 
 The dashboard image is upstream's `server/dashboard/Dockerfile` unchanged.
 

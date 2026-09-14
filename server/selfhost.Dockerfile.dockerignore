@@ -6,6 +6,7 @@
 !mem0
 !server
 server/dashboard
+server/mcp
 server/.env
 server/history
 **/__pycache__

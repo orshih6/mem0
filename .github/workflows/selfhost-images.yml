@@ -6,6 +6,7 @@
 # Images:
 #   ghcr.io/orshih6/mem0-server     (server/selfhost.Dockerfile, context = repo root)
 #   ghcr.io/orshih6/mem0-dashboard  (server/dashboard/Dockerfile)
+#   ghcr.io/orshih6/mem0-mcp        (server/mcp/Dockerfile)
 # Tags: sha-<full commit sha>, latest (default branch), and the tag name for selfhost-v* tags.
 name: Self-host images
 
@@ -38,6 +39,9 @@ jobs:
           - name: mem0-dashboard
             context: server/dashboard
             file: server/dashboard/Dockerfile
+          - name: mem0-mcp
+            context: server/mcp
+            file: server/mcp/Dockerfile
     steps:
       - uses: actions/checkout@v4
 
